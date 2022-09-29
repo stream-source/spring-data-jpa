@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
  */
 
 @Data
-@Entity
-@Table(name ="contact")
+@Entity(name = "ContactDO") //定义实体类
+@Table(name ="contact")//定义数据库表名
 public class ContactDO {
 
 	/**
