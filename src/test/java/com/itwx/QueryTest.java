@@ -43,4 +43,29 @@ public class QueryTest {
         List<ContactInfoDO> list = contactInfoService.listPageJpql(contactInfoQry);
         System.out.println(list);
     }
+
+    /**
+     * 方式一：单表，动态条件，分页查询
+     */
+    @Test
+    public void listDynamicJpqlOne() {
+        ContactInfoQry contactInfoQry = new ContactInfoQry();
+        contactInfoQry.setContactName("王");
+        contactInfoQry.setPhone("150");
+        contactInfoQry.setPageIndex(1);
+        contactInfoQry.setPageSize(10);
+        List<ContactInfoDO> list = contactInfoService.listDynamicJpqlOne(contactInfoQry);
+        System.out.println(list);
+    }
+
+    @Test
+    public void listDynamicJpqlOneOr() {
+        ContactInfoQry contactInfoQry = new ContactInfoQry();
+        contactInfoQry.setContactName("王");
+        contactInfoQry.setPhone("150");
+        contactInfoQry.setPageIndex(1);
+        contactInfoQry.setPageSize(10);
+        List<ContactInfoDO> list = contactInfoService.listDynamicJpqlOneOr(contactInfoQry);
+        System.out.println(list);
+    }
 }
