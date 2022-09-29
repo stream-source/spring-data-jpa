@@ -1,5 +1,6 @@
 package com.itwx.service;
 
+import com.github.wenhao.jpa.Specifications;
 import com.itwx.dao.ContactInfoRepository;
 import com.itwx.entity.ContactInfoDO;
 import com.itwx.query.ContactInfoQry;
@@ -8,8 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -69,5 +72,56 @@ public class ContactInfoService {
 
     /**
      * 分页查询：单表+分页+动态条件
+     * 使用JPA，JPQL查询
+     * 方式一：
+     * Root:代表查询的根对象 即实体
+     * CriteriaQuery : 顶层查询对象,用于自定义查询方式
+     * CriteriaBuilder:查询构造器,封装了很多的查询条件
+     * 持久化接口需要继承 JpaSpecificationExecutor<T>
      */
+    public List<ContactInfoDO> listDynamicJpqlOne(ContactInfoQry contactInfoQry) {
+
+        //单表使用Specification
+        Specification<ContactInfoDO> specification =(root, criteriaQuery, criteriaBuilder)->{
+
+            //处理单个and条件
+            Predicate name = criteriaBuilder.like(root.get("contactName"), contactInfoQry.getContactName() + "%");
+            Predicate phone = criteriaBuilder.like(root.get("phone"), contactInfoQry.getPhone() + "%");
+            return criteriaBuilder.and(name, phone);
+        };
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
+        Pageable of = PageRequest.of(contactInfoQry.getPageIndex() - 1, contactInfoQry.getPageSize(), sort);
+        Page<ContactInfoDO> doPage = contactInfoRepository.findAll(specification, of);
+        List<ContactInfoDO> contentList = doPage.getContent();
+        return contentList;
+    }
+
+    /**
+     * 处理多条件or
+     * @param contactInfoQry
+     * @return
+     */
+    public List<ContactInfoDO> listDynamicJpqlOneOr(ContactInfoQry contactInfoQry) {
+
+        //单表使用Specification
+        Specification<ContactInfoDO> nameSpeciation =(root, criteriaQuery, criteriaBuilder)->{
+            //处理多条件
+            Predicate name = criteriaBuilder.like(root.get("contactName"), contactInfoQry.getContactName() + "%");
+            return criteriaBuilder.and(name);
+        };
+
+        Specification<ContactInfoDO> phoneSpeciation =(root, criteriaQuery, criteriaBuilder)->{
+            //处理多条件
+            Predicate phone = criteriaBuilder.like(root.get("phone"), contactInfoQry.getPhone() + "%");
+            return criteriaBuilder.and(phone);
+        };
+
+        Specification<ContactInfoDO> specification = Specification.where(nameSpeciation).or(phoneSpeciation);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
+        Pageable of = PageRequest.of(contactInfoQry.getPageIndex() - 1, contactInfoQry.getPageSize(), sort);
+        Page<ContactInfoDO> doPage = contactInfoRepository.findAll(specification, of);
+        List<ContactInfoDO> contentList = doPage.getContent();
+        return contentList;
+    }
 }
