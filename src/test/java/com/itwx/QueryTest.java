@@ -68,4 +68,32 @@ public class QueryTest {
         List<ContactInfoDO> list = contactInfoService.listDynamicJpqlOneOr(contactInfoQry);
         System.out.println(list);
     }
+
+    /**
+     * Specifications动态查询
+     */
+    @Test
+    public void listSpecificationJpql() {
+        ContactInfoQry contactInfoQry = new ContactInfoQry();
+//        contactInfoQry.setContactName("王");
+        contactInfoQry.setPhone("150");
+        contactInfoQry.setPageIndex(1);
+        contactInfoQry.setPageSize(10);
+        List<ContactInfoDO> list = contactInfoService.listSpecificationJpql(contactInfoQry);
+        System.out.println(list);
+    }
+
+    /**
+     * and or条件
+     */
+    @Test
+    public void listSpecificationMoreJpql() {
+        ContactInfoQry contactInfoQry = new ContactInfoQry();
+        contactInfoQry.setContactName("王");
+        contactInfoQry.setPhone("150");
+        contactInfoQry.setPageIndex(1);
+        contactInfoQry.setPageSize(10);
+        List<ContactInfoDO> list = contactInfoService.listSpecificationMoreJpql(contactInfoQry);
+        System.out.println(list);
+    }
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.Predicate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ContactInfoService {
@@ -124,4 +125,46 @@ public class ContactInfoService {
         List<ContactInfoDO> contentList = doPage.getContent();
         return contentList;
     }
+
+
+    /**
+     * 使用jpa-spec依赖组件，动态查询
+     * Specifications
+     * @param contactInfoQry
+     * @return
+     */
+    public List<ContactInfoDO> listSpecificationJpql(ContactInfoQry contactInfoQry) {
+        Specification<ContactInfoDO> specification = Specifications.<ContactInfoDO>and()
+                .like(contactInfoQry.getContactName() != null && !"".equals(contactInfoQry.getContactName()) ,
+                        "contactName", contactInfoQry.getContactName() + "%")
+                .like("phone", contactInfoQry.getPhone() + "%")
+                .build();
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
+        Pageable of = PageRequest.of(contactInfoQry.getPageIndex() - 1, contactInfoQry.getPageSize(), sort);
+        Page<ContactInfoDO> page = contactInfoRepository.findAll(specification, of);
+        return page.getContent();
+    }
+
+
+    /**
+     * and,or条件查询方式
+     * @param contactInfoQry
+     * @return
+     */
+    public List<ContactInfoDO> listSpecificationMoreJpql(ContactInfoQry contactInfoQry) {
+        Specification<ContactInfoDO> specification = Specifications.<ContactInfoDO>or()
+                .like(contactInfoQry.getContactName() != null && !"".equals(contactInfoQry.getContactName()) ,
+                        "contactName", contactInfoQry.getContactName() + "%")
+                .predicate(Specifications.or().eq("phone", "13333333333").build())
+                .build();
+
+        //或者定义两个specification类，or连接
+        Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
+        Pageable of = PageRequest.of(contactInfoQry.getPageIndex() - 1, contactInfoQry.getPageSize(), sort);
+        Page<ContactInfoDO> page = contactInfoRepository.findAll(specification, of);
+        return page.getContent();
+    }
+
+
 }
