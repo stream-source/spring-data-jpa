@@ -166,5 +166,15 @@ public class ContactInfoService {
         return page.getContent();
     }
 
+    /**
+     * 若自定义查询
+     */
+    public List<ContactInfoDO> listNativeSql(ContactInfoQry contactInfoQry) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "create_time");
+        Pageable of = PageRequest.of(contactInfoQry.getPageIndex() - 1, contactInfoQry.getPageSize(), sort);
+        Page<ContactInfoDO> page = contactInfoRepository.findContactByName(contactInfoQry.getContactName(), of);
+        return page.getContent();
+    }
+
 
 }

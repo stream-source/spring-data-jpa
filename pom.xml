@@ -25,6 +25,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+<!--        querydsl依赖-->
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
@@ -86,6 +87,7 @@
                         <goals>
                             <goal>process</goal>
                         </goals>
+<!--                        引入querydsl配置-->
                         <configuration>
                             <outputDirectory>target/generated-sources</outputDirectory>
                             <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>

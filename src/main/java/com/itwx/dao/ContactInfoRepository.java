@@ -20,4 +20,7 @@ public interface ContactInfoRepository extends BaseJpaRepository<ContactInfoDO, 
 
     @Query(value = "select contactInfoDO from ContactInfoDO contactInfoDO where contactInfoDO.phone like ?1%")
     Page<ContactInfoDO> findJpqlPage(String phone, Pageable of);
+
+    @Query(value = "select * from contact_info where contact_name like ?1%", nativeQuery = true)
+    Page<ContactInfoDO> findContactByName(String contactName, Pageable of);
 }

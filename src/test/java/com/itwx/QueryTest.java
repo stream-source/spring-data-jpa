@@ -96,4 +96,18 @@ public class QueryTest {
         List<ContactInfoDO> list = contactInfoService.listSpecificationMoreJpql(contactInfoQry);
         System.out.println(list);
     }
+
+    /**
+     * 自定义SQL分页查询
+     */
+    @Test
+    public void listNativeSql() {
+        ContactInfoQry contactInfoQry = new ContactInfoQry();
+        contactInfoQry.setContactName("王");
+        contactInfoQry.setPhone("150");
+        contactInfoQry.setPageIndex(1);
+        contactInfoQry.setPageSize(2);
+        List<ContactInfoDO> list = contactInfoService.listNativeSql(contactInfoQry);
+        System.out.println(list);
+    }
 }
