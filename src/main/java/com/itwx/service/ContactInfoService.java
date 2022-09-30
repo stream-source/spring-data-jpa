@@ -3,7 +3,10 @@ package com.itwx.service;
 import com.github.wenhao.jpa.Specifications;
 import com.itwx.dao.ContactInfoRepository;
 import com.itwx.entity.ContactInfoDO;
+import com.itwx.entity.QContactInfoDO;
 import com.itwx.query.ContactInfoQry;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +25,9 @@ public class ContactInfoService {
 
     @Autowired
     private ContactInfoRepository contactInfoRepository;
+
+    @Autowired
+    private JPAQueryFactory jpaQueryFactory;
 
     /**
      * 分页查询
@@ -174,6 +180,21 @@ public class ContactInfoService {
         Pageable of = PageRequest.of(contactInfoQry.getPageIndex() - 1, contactInfoQry.getPageSize(), sort);
         Page<ContactInfoDO> page = contactInfoRepository.findContactByName(contactInfoQry.getContactName(), of);
         return page.getContent();
+    }
+
+
+    /**
+     * 使用query-dsl-jpa查询
+     */
+    public List<ContactInfoDO> listQueryDsl(ContactInfoQry contactInfoQry) {
+        int pageIndex = contactInfoQry.getPageIndex();
+        int pageSize = contactInfoQry.getPageSize();
+        int offset = (pageIndex - 1) * pageSize;
+        QContactInfoDO contactInfoDO = QContactInfoDO.contactInfoDO;
+        JPAQuery<ContactInfoDO> contactInfoDOJPAQuery = jpaQueryFactory.select(contactInfoDO).fetchAll();
+        contactInfoDOJPAQuery.fetchCount();
+
+        return null;
     }
 
 
