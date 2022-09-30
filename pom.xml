@@ -15,6 +15,7 @@
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>11</java.version>
+        <blaze-persistence.version>1.6.7</blaze-persistence.version>
     </properties>
     <dependencies>
         <dependency>
@@ -29,10 +30,12 @@
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
+            <version>5.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
+            <version>5.0.0</version>
             <scope>provided</scope>
         </dependency>
         <!--     动态条件查询依赖   -->
@@ -61,6 +64,14 @@
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
             <scope>test</scope>
+        </dependency>
+<!--        引入blazebit-->
+        <dependency>
+            <groupId>com.blazebit</groupId>
+            <artifactId>blaze-persistence-bom</artifactId>
+            <version>${blaze-persistence.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
         </dependency>
     </dependencies>
 
